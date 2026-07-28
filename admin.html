@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HadesNet // Admin Panel</title>
+    <style>
+        /* ==========================================================================
+           HADENET GLOBAL AND LAYOUT STYLES
+           ========================================================================== */
+        .admin-body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0c0f12; /* Deep dark space background */
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ==========================================================================
+           SIDEBAR NAVIGATION
+           ========================================================================== */
+        .sidebar {
+            width: 260px;
+            background-color: #11151c;
+            border-right: 1px solid #1e293b;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .logo-area h2 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 2.5rem;
+            color: #38bdf8; /* Cyber blue accent */
+        }
+
+        .logo-area .accent-text {
+            color: #ef4444; /* Alert red for admin */
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, 
+        .nav-links a.active {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+
+        .nav-links a.active {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* ==========================================================================
+           MAIN CONTENT AREA
+           ========================================================================== */
+        .main-content {
+            flex-grow: 1;
+            padding: 2.5rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-header h1 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .system-status {
+            background-color: #1e293b;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .status-indicator.online {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981; /* Lime green */
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* ==========================================================================
+           METRICS GRID
+           ========================================================================== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .metric-card {
+            background-color: #11151c;
+            border: 1px solid #1e293b;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .metric-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            margin: 0;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           ADMIN INTERACTIVE GRID split
+           ========================================================================== */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+        }
+
+        .admin-card {
+            background-color: #11151c;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-card h3 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 0.75rem;
+            color: #f8fafc;
+        }
+
+        /* ==========================================================================
+           CONFIG FORM STYLES
+           ========================================================================== */
+        .config-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .config-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .config-form select,
+        .config-form input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #0c0f12;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .config-form select:focus,
+        .config-form input:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+
+        .btn-primary {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            align-self: flex-start;
+        }
+
+        .btn-primary:hover {
+            background-color: #dc2626;
+        }
+
+        /* ==========================================================================
+           FORENSIC TERMINAL LOG COMPONENT
+           ========================================================================== */
+        .log-terminal {
+            background-color: #05070a;
+            border: 1px solid #1e293b;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 1rem;
+            border-radius: 6px;
+            height: 250px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-line {
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap;
+        }
+
+        .timestamp {
+            color: #64748b;
+        }
+
+        .log-success { color: #10b981; }
+        .log-info { color: #38bdf8; }
+        .log-warning { color: #f59e0b; }
+    </style>
+</head>
+<body class="admin-body">
+
+    <div class="dashboard-wrapper">
+        
+        <!-- Sidebar Navigation Area -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>HADESNET <span class="accent-text">// ADMIN</span></h2>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Standard View</a>
+                <a href="#" class="active">Admin Controls</a>
+                <a href="#simulations">Sim Config</a>
+                <a href="#logs">System Logs</a>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Administrative Control Room</h1>
+                <div class="system-status">
+                    <span class="status-indicator online"></span> SIMULATOR ENGINE: RUNNING
+                </div>
+            </header>
+
+            <!-- Operational Metrics Row -->
+            <section class="metrics-grid">
+                <div class="metric-card">
+                    <h3>Active Scenarios</h3>
+                    <p class="metric-value">14</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Threats Simulated</h3>
+                    <p class="metric-value">1,248</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Engine Load</h3>
+                    <p class="metric-value">24%</p>
+                </div>
+            </section>
+
+            <!-- Interactive Configurations and Logs Split -->
+            <div class="admin-grid">
+                
+                <!-- Controls Card Component -->
+                <section class="admin-card" id="simulations">
+                    <h3>Threat Simulator Settings</h3>
+                    <form id="admin-config-form" class="config-form" onsubmit="event.preventDefault();">
+                        <div class="form-group">
+                            <label for="simulation-mode">Global Execution Environment</label>
+                            <select id="simulation-mode" name="simMode">
+                                <option value="passive">Passive Reconnaissance Mode</option>
+                                <option value="active">Active Application-Layer Assessment</option>
+                                <option value="aggressive">Aggressive Threat Simulation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="phish-rate">Phishing Email Dispatch Target (per min)</label>
+                            <input type="number" id="phish-rate" name="phishRate" value="5" min="1" max="60">
+                        </div>
+                        <button type="submit" class="btn-primary">Commit Configurations</button>
+                    </form>
+                </section>
+
+                <!-- Output Log Card Component -->
+                <section class="admin-card" id="logs">
+                    <h3>Live Engine Forensic Feed</h3>
+                    <div class="log-terminal">
+                        <div class="log-line"><span class="timestamp">[23:41:02]</span> <span class="log-success">SUCCESS:</span> Phishing simulation template "Financial-Alert-V2" deployed.</div>
+                        <div class="log-line"><span class="timestamp">[23:43:15]</span> <span class="log-info">INFO:</span> Payload forensic tracking actively monitoring interface ports.</div>
+                        <div class="log-line"><span class="timestamp">[23:44:20]</span> <span class="log-warning">WARN:</span> Simulated credential harvesting intercept detected from local vector.</div>
+                        <div class="log-line"><span class="timestamp">[23:45:01]</span> <span class="log-info">INFO:</span> Awaiting downstream configuration commitments...</div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
